@@ -1,0 +1,11 @@
+{
+	"name": "한영 사전",
+	"description":"한영 단어 변환기",
+	"version":"1.0",
+	"manifest_version":2,
+	"browser_action":{
+		"default_title":"한영 사전",
+		"default_popup":"dictionary.html",
+		"default_icon":"dictionary_extension.png"
+	}
+}
