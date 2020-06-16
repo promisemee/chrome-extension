@@ -58,9 +58,18 @@ function changeLanguage(){
 	textOutput.value = tmp;
 }
 
-const projectId = 'PROJECT_ID';
+const {TranslationServiceClient} = require('@google-cloud/translate');
+const projectId = '	5e2c6ef8a5c400b912325ba9c7b861f2c3bc8660';
+const translationClient = new TranslationServiceClient();
 
 function translateInput(query, src, tar){
+	// google.language.detect(query, function(result){
+	// 	if(!result.error && result.language){
+	// 		google.language.translate(query, src, tar, function(result){
+	// 			return result.translation;
+	// 		});
+	// 	}
+	// // });
 	const request = {
 		parent: translationClient.locationPath(projectId, location),
 		contents: [query],
@@ -70,4 +79,6 @@ function translateInput(query, src, tar){
 	};
 	const [response] = translationClient.translateText(request);
 	return translation.translatedText;
+
+
 }
