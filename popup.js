@@ -11,6 +11,15 @@ let copy = document.getElementById("copyButton");
 let toastMessage = document.getElementById('toastMessage');
 let koreanInput = true;
 
+textInput.onkeyup = function(element){
+	if(event.keyCode == 13){
+		let input = element.target.value;
+		var src, tar;
+		if(koreanInput){src = 'ko'; tar = 'en';}
+		else{src = 'en'; tar = 'ko';}
+		textOutput.value = translateInput(input, src, tar);
+	}
+}
 
 erase.onclick = function() {
 	textInput.value = '';
@@ -35,35 +44,30 @@ function showToastMessage(text){
 }
 
 function changeLanguage(){
-	if(koreanInput){//change to Korean->English
+	if(koreanInput){
 		koreanInput = false;
-		inputLabel.innerHTML="한국어";
-		outputLabel.innerHTML="영어";
-	}else{
-		koreanInput = true;
 		inputLabel.innerHTML="영어";
 		outputLabel.innerHTML="한국어";
+	}else{
+		koreanInput = true;
+		inputLabel.innerHTML="한국어";
+		outputLabel.innerHTML="영어";
 	}
 	let tmp = textInput.value;
 	textInput.value = textOutput.value;
 	textOutput.value = tmp;
-	//change mode
 }
 
-function readJSON(path) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', path, true);
-    xhr.responseType = 'blob';
-    xhr.onload = function(e) { 
-      if (this.status == 200) {
-          var file = new File([this.response], 'temp');
-          var fileReader = new FileReader();
-          fileReader.addEventListener('load', function(){
-              version = JSON.parse(fileReader.result) ? JSON.parse(fileReader.result).version : '';
-              document.getElementById('version').innerHTML = `v ${version}`;
-          });
-          fileReader.readAsText(file);
-      } 
-    }
-    xhr.send();
+const projectId = 'PROJECT_ID';
+
+function translateInput(query, src, tar){
+	const request = {
+		parent: translationClient.locationPath(projectId, location),
+		contents: [query],
+		mimeType: 'text/plain',
+		sourceLanguageCode : src,
+		targetLanguageCode : tar,
+	};
+	const [response] = translationClient.translateText(request);
+	return translation.translatedText;
 }
